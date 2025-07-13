@@ -1,0 +1,1 @@
+`sudo dnf install libpq-devel` - чтобы установился psycopg2
