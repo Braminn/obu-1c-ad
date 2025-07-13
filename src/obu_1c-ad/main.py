@@ -1,11 +1,35 @@
 import psycopg2
 import csv
 import os
+import logging
 from dotenv import load_dotenv
 from datetime import datetime
 
 # Загрузка переменных окружения
 load_dotenv()
+
+# Настройка логирования
+log_dir = "logs"
+os.makedirs(log_dir, exist_ok=True)
+log_file = os.path.join(log_dir, "obu-1c-ad.log")
+
+# Создаём логгер
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# Формат логов
+log_format = logging.Formatter('%(asctime)s [%(levelname)s] %(message)s', datefmt='%Y-%m-%d %H:%M:%S')
+
+# Файл-обработчик
+file_handler = logging.FileHandler(log_file, encoding='utf-8')
+file_handler.setFormatter(log_format)
+logger.addHandler(file_handler)
+
+# Обработчик для консоли
+console_handler = logging.StreamHandler()
+console_handler.setFormatter(log_format)
+logger.addHandler(console_handler)
+
 
 def get_version_from_schema_migrations(cursor):
     """Получает значение version из таблицы schema_migrations."""
@@ -15,6 +39,7 @@ def get_version_from_schema_migrations(cursor):
         return result[0]
     else:
         raise Exception("Не найдена запись в таблице schema_migrations")
+
 
 def export_workplaces_to_csv():
     db_config = {
@@ -27,8 +52,10 @@ def export_workplaces_to_csv():
     }
     
     try:
+        logger.info("Попытка подключения к базе данных...")
         conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
+        logger.info("Подключение к базе данных успешно")
         
         # Получаем версию для имени файла
         version = get_version_from_schema_migrations(cursor)
@@ -36,7 +63,6 @@ def export_workplaces_to_csv():
 
         # Получение пути из переменной окружения
         export_dir = os.getenv("EXPORT_DIR", "data")
-        print(export_dir)
 
         # Создание папки, если её нет
         os.makedirs(export_dir, exist_ok=True)
@@ -46,9 +72,10 @@ def export_workplaces_to_csv():
 
         # Полный путь к файлу
         output_file = os.path.join(export_dir, filename)
-        print(f"Экспорт будет выполнен в: {os.path.abspath(output_file)}")
         
-        # SQL-запрос с добавлением inn перед company_id
+        logger.info(f"Файл будет сохранён в: {os.path.abspath(output_file)}")
+        
+        # SQL-запрос
         query = """
         SELECT 
             w.employee_id,
@@ -69,22 +96,27 @@ def export_workplaces_to_csv():
         """
         cursor.execute(query)
         column_names = [desc[0] for desc in cursor.description]
+        data = cursor.fetchall()
+        logger.info(f"Успешно получено {len(data)} записей из базы данных")
 
         with open(output_file, mode='w', newline='', encoding='utf-8-sig') as file:
             writer = csv.writer(file)
             writer.writerow(column_names)
-            writer.writerows(cursor.fetchall())
+            writer.writerows(data)
 
-        print(f"Данные успешно экспортированы в {output_file}")
+        logger.info(f"Файл успешно сохранён: {output_file}")
 
     except Exception as e:
-        print(f"Ошибка: {e}")
+        logger.error(f"Ошибка: {e}")
 
     finally:
         if 'cursor' in locals():
             cursor.close()
+            logger.info("Курсор закрыт")
         if 'conn' in locals():
             conn.close()
+            logger.info("Соединение с базой данных закрыто")
+
 
 if __name__ == "__main__":
     export_workplaces_to_csv()
