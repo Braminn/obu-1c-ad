@@ -92,7 +92,8 @@ def export_workplaces_to_csv():
         LEFT JOIN companies c ON w.company_id = c.id
         LEFT JOIN employees e ON w.employee_id = e.id
         LEFT JOIN positions p ON w.position_id = p.id
-        LEFT JOIN departments d ON w.department_id = d.id;
+        LEFT JOIN departments d ON w.department_id = d.id
+        ORDER BY w.recruit_date DESC;
         """
         cursor.execute(query)
         column_names = [desc[0] for desc in cursor.description]
