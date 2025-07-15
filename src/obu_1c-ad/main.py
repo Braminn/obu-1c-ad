@@ -67,8 +67,14 @@ def export_workplaces_to_csv():
         # Создание папки, если её нет
         os.makedirs(export_dir, exist_ok=True)
 
-        # Формируем имя файла с дефисом между датой и версией
-        filename = f"{today}-{version}.csv"
+        # Получаем формат имени файла из переменной окружения
+        filename_format = os.getenv("FILENAME_FORMAT", "full").lower()
+
+        # Выбираем имя файла в зависимости от формата
+        if filename_format == "version":
+            filename = f"{version}.csv"
+        else:  # по умолчанию или если явно указано "full"
+            filename = f"{today}-{version}.csv"
 
         # Полный путь к файлу
         output_file = os.path.join(export_dir, filename)

@@ -1,8 +1,12 @@
-Для работы скрипта, необходиму установить uv
+Для работы скрипта, необходимо установить *uv*.
+`curl -LsSf https://astral.sh/uv/install.sh | sh`
+Или смотри документацию:
+https://docs.astral.sh/uv/getting-started/installation/
 
-`sudo dnf install libpq-devel` - чтобы установился psycopg2 для работы с БД
+Чтобы установился psycopg2, нужно установить *libpq-devel*
+`sudo dnf install libpq-devel`
 
-Создать файл .env с содержимым
+Создать файл *.env* с содержимым
 ```
 DB_HOST=
 DB_PORT=
@@ -10,8 +14,10 @@ DB_NAME=
 DB_USER=
 DB_PASSWORD=
 EXPORT_DIR=
+FILENAME_FORMAT=full для полного имени файла или version для сокращенного
 ```
 
-`uv run ./src/obu_1c-ad/main.py` - запуск скрипта через uv
+Запуск скрипта через uv
+`uv run ./src/obu_1c-ad/main.py`
 
-Для удобства запуска через cron или CI/CD можно использовать запуск через run.sh
+Для удобства запуска через cron или CI/CD можно использовать *run.sh* (он так же использует uv)
