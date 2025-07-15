@@ -1,3 +1,19 @@
 #!/bin/bash
-cd /home/stegancevva@admlr.loc/Doc/Python/obu-1c-ad
-/home/stegancevva@admlr.loc/.local/bin/uv run ./src/obu_1c-ad/main.py
+
+# Путь к директории, где находится этот скрипт
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Переход в директорию проекта
+cd "$SCRIPT_DIR" || exit 1
+
+# Путь к интерпретатору uv из текущего окружения (если установлен)
+UV_BIN="$(which uv)"
+
+# Проверим, найден ли uv
+if [[ -z "$UV_BIN" ]]; then
+  echo "Ошибка: команда 'uv' не найдена. Убедитесь, что она установлена и доступна в PATH."
+  exit 1
+fi
+
+# Запуск основного скрипта
+"$UV_BIN" run ./src/obu_1c-ad/main.py
