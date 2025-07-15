@@ -62,12 +62,25 @@ def export_workplaces_to_csv():
         data = cursor.fetchall()
         logger.info(f"Успешно получено {len(data)} записей из базы данных")
 
+        # Сохраняем файл в UTF-8
         with open(output_file, mode='w', newline='', encoding='utf-8-sig') as file:
             writer = csv.writer(file, delimiter=';')
             writer.writerow(column_names)
             writer.writerows(data)
-
         logger.info(f"Файл успешно сохранён: {output_file}")
+
+        # Формируем имя ANSI-файла
+        output_file_ansi = os.path.splitext(output_file)[0] + "_ANSI.csv"
+        
+        # Сохраняем файл в ANSI (Windows-1251)
+        try:
+            with open(output_file_ansi, mode='w', newline='', encoding='cp1251') as file:
+                writer = csv.writer(file, delimiter=';')
+                writer.writerow(column_names)
+                writer.writerows(data)
+            logger.info(f"Файл успешно сохранён (ANSI): {output_file_ansi}")
+        except UnicodeEncodeError as e:
+            logger.error(f"Ошибка кодировки при сохранении ANSI-файла: {e}")
 
     except Exception as e:
         logger.error(f"Ошибка: {e}")
