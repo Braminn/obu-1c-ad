@@ -9,3 +9,16 @@ dependencies = [
     "logging>=0.4.9.6",
     "psycopg2>=2.9.10",
 ]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.12.3",
+]
+
+[tool.ruff]
+line-length = 88
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "B", "C", "D", "I", "UP"]
+ignore = ["D100", "D103", "D104"]

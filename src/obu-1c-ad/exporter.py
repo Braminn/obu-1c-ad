@@ -2,12 +2,13 @@
 import csv
 import os
 from datetime import datetime
-from .logger import logger
+
 from .database import get_connection, get_version_from_schema_migrations
+from .logger import logger
 
 
 def export_workplaces_to_csv():
-    """Экспорт данных из БД в csv файл"""
+    """Экспорт данных из БД в csv файл."""
     try:
         logger.info("Попытка подключения к базе данных...")
         conn = get_connection()
@@ -74,7 +75,7 @@ def export_workplaces_to_csv():
         
         # Сохраняем файл в ANSI (Windows-1251)
         try:
-            with open(output_file_ansi, mode='w', newline='', encoding='cp1251') as file:
+            with open(output_file_ansi, mode='w', newline='', encoding='cp1251') as file:  # noqa: E501
                 writer = csv.writer(file, delimiter=';')
                 writer.writerow(column_names)
                 writer.writerows(data)

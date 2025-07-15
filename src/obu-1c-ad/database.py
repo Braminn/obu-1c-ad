@@ -1,14 +1,13 @@
-# src/obu_1c_ad/database.py
-import psycopg2
 import os
+
+import psycopg2
 from dotenv import load_dotenv
 
-
+# Загружаем переменные из .env
 load_dotenv()
 
-
 def get_connection():
-    """Подключение к БД"""
+    """Подключение к БД."""
     db_config = {
         'host': os.getenv("DB_HOST"),
         'port': os.getenv("DB_PORT"),
