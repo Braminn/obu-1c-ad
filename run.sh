@@ -16,4 +16,4 @@ if [[ -z "$UV_BIN" ]]; then
 fi
 
 # Запуск основного скрипта
-"$UV_BIN" run ./src/obu_1c-ad/main.py
+"$UV_BIN" run -m src.obu-1c-ad.main

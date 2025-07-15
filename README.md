@@ -18,6 +18,6 @@ FILENAME_FORMAT=full для полного имени файла или version 
 ```
 
 Запуск скрипта через uv
-`uv run ./src/obu_1c-ad/main.py`
+`uv run -m src.obu-1c-ad.main`
 
 Для удобства запуска через cron или CI/CD можно использовать *run.sh* (он так же использует uv)
