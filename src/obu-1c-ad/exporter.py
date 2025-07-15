@@ -63,7 +63,7 @@ def export_workplaces_to_csv():
         logger.info(f"Успешно получено {len(data)} записей из базы данных")
 
         with open(output_file, mode='w', newline='', encoding='utf-8-sig') as file:
-            writer = csv.writer(file)
+            writer = csv.writer(file, delimiter=';')
             writer.writerow(column_names)
             writer.writerows(data)
 
